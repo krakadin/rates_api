@@ -1,0 +1,436 @@
+{
+    "swagger": "2.0",
+    "basePath": "/api",
+    "paths": {
+        "/auth/": {
+            "put": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "summary": "Authentication",
+                "operationId": "Authentication",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/Auth"
+                        }
+                    }
+                ],
+                "security": [],
+                "tags": [
+                    "auth"
+                ]
+            }
+        },
+        "/rates/approve": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not found or missing parameters"
+                    },
+                    "409": {
+                        "description": "Conflict"
+                    }
+                },
+                "summary": "Auto Approve Reservations",
+                "operationId": "Auto Approve Reservations",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/Input_Approve_Reservations"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "apikey": []
+                    }
+                ],
+                "tags": [
+                    "rates"
+                ]
+            }
+        },
+        "/rates/load": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not found or missing parameters"
+                    },
+                    "409": {
+                        "description": "Conflict"
+                    }
+                },
+                "summary": "Load OAR Quote",
+                "operationId": "Load OAR Quote",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/Input_Load_Quote"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "apikey": []
+                    }
+                ],
+                "tags": [
+                    "rates"
+                ]
+            }
+        },
+        "/rates/retrieve/{batch_number}": {
+            "parameters": [
+                {
+                    "in": "path",
+                    "description": "Batch Number",
+                    "name": "batch_number",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not found or missing parameters"
+                    },
+                    "409": {
+                        "description": "Conflict"
+                    }
+                },
+                "summary": "Retrieve Quotes",
+                "operationId": "Retrieve Quotes",
+                "security": [
+                    {
+                        "apikey": []
+                    }
+                ],
+                "tags": [
+                    "rates"
+                ]
+            }
+        },
+        "/rates/run": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not found or missing parameters"
+                    },
+                    "409": {
+                        "description": "Conflict"
+                    }
+                },
+                "summary": "Run Quotes",
+                "operationId": "Run Quotes",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/Input_Run_Quote"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "apikey": []
+                    }
+                ],
+                "tags": [
+                    "rates"
+                ]
+            }
+        }
+    },
+    "info": {
+        "title": "Rates API",
+        "version": "1.0.0",
+        "description": "Rates API framework - InTempo"
+    },
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "securityDefinitions": {
+        "apikey": {
+            "type": "apiKey",
+            "in": "header",
+            "name": "X-API-KEY"
+        }
+    },
+    "security": [
+        {
+            "apikey": []
+        }
+    ],
+    "tags": [
+        {
+            "name": "auth",
+            "description": "Authentication related operations"
+        },
+        {
+            "name": "rates",
+            "description": "Rates related operations"
+        }
+    ],
+    "definitions": {
+        "Auth": {
+            "properties": {
+                "credentials": {
+                    "$ref": "#/definitions/Auth_Detail"
+                }
+            },
+            "type": "object"
+        },
+        "Auth_Detail": {
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "username": {
+                    "type": "string",
+                    "description": "The user name",
+                    "minLength": 3,
+                    "maxLength": 10
+                },
+                "password": {
+                    "type": "string",
+                    "description": "The password",
+                    "minLength": 3,
+                    "maxLength": 10
+                }
+            },
+            "type": "object"
+        },
+        "Input_Approve_Reservations": {
+            "required": [
+                "company_code",
+                "reservation_number",
+                "user"
+            ],
+            "properties": {
+                "company_code": {
+                    "type": "string",
+                    "description": "Company Code",
+                    "minLength": 2,
+                    "maxLength": 2
+                },
+                "reservation_number": {
+                    "type": "integer",
+                    "description": "Reservation Number",
+                    "minimum": 1,
+                    "maximum": 999999999999
+                },
+                "user": {
+                    "type": "string",
+                    "description": "User",
+                    "maxLength": 10
+                }
+            },
+            "type": "object"
+        },
+        "Input_Load_Quote": {
+            "required": [
+                "batch_number",
+                "category",
+                "class",
+                "company_code",
+                "customer_number",
+                "date_in",
+                "date_out",
+                "day_rate",
+                "discount",
+                "job_number",
+                "location",
+                "min_rate",
+                "month_rate",
+                "ordered_by",
+                "time_in",
+                "time_out",
+                "week_rate"
+            ],
+            "properties": {
+                "company_code": {
+                    "type": "string",
+                    "description": "Company Code",
+                    "minLength": 2,
+                    "maxLength": 2
+                },
+                "location": {
+                    "type": "string",
+                    "description": "Location",
+                    "minLength": 1,
+                    "maxLength": 4
+                },
+                "customer_number": {
+                    "type": "integer",
+                    "description": "Customer Number",
+                    "minimum": 1,
+                    "maximum": 9999999
+                },
+                "job_number": {
+                    "type": "string",
+                    "description": "Job Number",
+                    "minLength": 1,
+                    "maxLength": 20
+                },
+                "category": {
+                    "type": "integer",
+                    "description": "Category",
+                    "minimum": 1,
+                    "maximum": 999
+                },
+                "class": {
+                    "type": "integer",
+                    "description": "Class",
+                    "minimum": 1,
+                    "maximum": 9999
+                },
+                "date_out": {
+                    "type": "integer",
+                    "description": "Date Out",
+                    "minimum": 1,
+                    "maximum": 99999999
+                },
+                "time_out": {
+                    "type": "integer",
+                    "description": "Time Out",
+                    "minimum": 1,
+                    "maximum": 9999
+                },
+                "date_in": {
+                    "type": "integer",
+                    "description": "Date In",
+                    "minimum": 1,
+                    "maximum": 99999999
+                },
+                "time_in": {
+                    "type": "integer",
+                    "description": "Time In",
+                    "minimum": 1,
+                    "maximum": 9999
+                },
+                "ordered_by": {
+                    "type": "string",
+                    "description": "Ordered By",
+                    "minLength": 1,
+                    "maxLength": 20
+                },
+                "min_rate": {
+                    "type": "number",
+                    "description": "Min Rate",
+                    "maximum": 999999999.99
+                },
+                "day_rate": {
+                    "type": "number",
+                    "description": "Day Rate",
+                    "maximum": 999999999.99
+                },
+                "week_rate": {
+                    "type": "number",
+                    "description": "Week Rate",
+                    "maximum": 999999999.99
+                },
+                "month_rate": {
+                    "type": "number",
+                    "description": "Month Rate",
+                    "maximum": 999999999.99
+                },
+                "discount": {
+                    "type": "number",
+                    "description": "Discount",
+                    "maximum": 99.99
+                },
+                "batch_number": {
+                    "type": "integer",
+                    "description": "Batch Number",
+                    "minimum": 0,
+                    "maximum": 9999999999999999999
+                }
+            },
+            "type": "object"
+        },
+        "Input_Run_Quote": {
+            "required": [
+                "batch_number",
+                "company_code",
+                "location"
+            ],
+            "properties": {
+                "company_code": {
+                    "type": "string",
+                    "description": "Company Code",
+                    "minLength": 2,
+                    "maxLength": 2
+                },
+                "location": {
+                    "type": "string",
+                    "description": "Location",
+                    "minLength": 1,
+                    "maxLength": 4
+                },
+                "batch_number": {
+                    "type": "integer",
+                    "description": "Batch Number",
+                    "minimum": 0,
+                    "maximum": 9999999999999999999
+                }
+            },
+            "type": "object"
+        }
+    },
+    "responses": {
+        "ParseError": {
+            "description": "When a mask can't be parsed"
+        },
+        "MaskError": {
+            "description": "When any error occurs on mask"
+        }
+    }
+}
